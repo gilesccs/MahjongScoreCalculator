@@ -17,7 +17,7 @@
     height: 100%;
     display: block;
     margin: 0 auto;
-    background-color: rgba(158, 80, 16, 0.884);
+    background-color: rgba(238, 152, 82, 0.884);
     opacity: 0.98;
 }
 
@@ -28,7 +28,7 @@
 }
 
 h1{
-    color: rgb(212, 158, 172);
+    color: rgb(255, 255, 255);
     text-align: center;
     font-size: 80px;
     font-Family: "Arial";
