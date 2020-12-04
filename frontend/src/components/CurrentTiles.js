@@ -22,9 +22,10 @@ function CurrentTiles() {
     <Grid container className={classes.root} spacing={2}>
       <Grid item xs={12}>
         <Grid container justify="center" spacing={2}>
-          {[0, 1, 2, 3].map((value) => (
+          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12].map((value) => (
             <Grid key={value} item>
-              <Paper className={classes.paper} />
+            {/* refer to index of list to fetch image*/}
+              <img src="assets/default.png" alt="" />
             </Grid>
           ))}
         </Grid>
