@@ -13,6 +13,7 @@ import {
   Checkbox,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import { calculateTai } from "../helper/calculator.js";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -135,6 +136,9 @@ export default function TileGrid() {
     haidilao: false,
     huashang: false,
     qg: false,
+    sevenzimo: false,
+    sevenshoot: false,
+    pinghustate: false,
   });
 
   // For checkbox
@@ -196,6 +200,23 @@ export default function TileGrid() {
   function resetFlowers(flowersCurrent, current) {
     var tiles = [];
     setFlowers(tiles);
+  }
+
+  function handleSubmit() {
+    var tilesList = [];
+    tilesCurrent.forEach((element) => {
+      tilesList.push(element.id);
+    })
+    var tai = calculateTai(
+      tilesList,
+      conditions.currentwind,
+      conditions.haidilao,
+      conditions.qg,
+      conditions.sevenzimo,
+      conditions.sevenshoot,
+      conditions.pinghustate
+    );
+    alert("Congratulations! you have " +tai + "tai");
   }
 
   return (
@@ -403,7 +424,41 @@ export default function TileGrid() {
                 }
                 label="Qiang Gang (Winning off a tile someone else self Gang):"
               />
-              <Button variant="outlined" onClick={() => resetFlowers()}>
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={conditions.sevenzimo}
+                    onChange={handleChange}
+                    name="sevenzimo"
+                    color="primary"
+                  />
+                }
+                label="Seven pairs (self-draw)"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={conditions.sevenshoot}
+                    onChange={handleChange}
+                    name="sevenshoot"
+                    color="primary"
+                  />
+                }
+                label="Seven pairs (winning of other's tile)"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={conditions.pinghustate}
+                    onChange={handleChange}
+                    name="pinghustate"
+                    color="primary"
+                  />
+                }
+                label="Pinghu"
+              />
+              <Button variant="outlined" onClick={() => handleSubmit()}>
                 Calculate
               </Button>
             </FormControl>

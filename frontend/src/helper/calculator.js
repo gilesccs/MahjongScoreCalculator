@@ -47,7 +47,7 @@ function countOccurence(tile,currenttiles){
   return count;
 }
 
-function calculateTai(currenttiles, currentwind, haidilao, huashang, qg, sevenzimo, sevenshoot) {
+export function calculateTai(currenttiles, currentwind, haidilao, huashang, qg, sevenzimo, sevenshoot, pinghustate) {
   let tai = 0;
   //check animals
   for(let i =0; i<currenttiles.length; i++){
