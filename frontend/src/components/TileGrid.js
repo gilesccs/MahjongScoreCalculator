@@ -11,10 +11,10 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    // flexWrap: "wrap",
+    flexWrap: "wrap",
     flexGrow: 1,
-    justifyContent: "space-around",
-    // justifyContent: "center",
+    // justifyContent: "space-around",
+    justifyContent: "center",
     overflow: "hidden",
     backgroundColor: theme.palette.background.paper,
   },
@@ -50,21 +50,47 @@ const useStyles = makeStyles((theme) => ({
 function populateTiles() {
   const tilesData = [];
   // var types = ["bamboo","tong","wan"]
-  var types = ["tong"];
+  var types = ["t", "b", "w"];
   types.forEach((element) => {
     for (var i = 1; i <= 9; i++) {
       var obj = {};
-      obj["img"] = "assets/" + element + "-" + i + ".png";
-      obj["id"] = element + "-" + i;
+      obj["img"] = "assets/" + element + i + ".png";
+      obj["id"] = element + i;
       tilesData.push(obj);
     }
   });
-  for (var i = 0; i < 30; i++) {
+  // for (var i = 0; i < 30; i++) {
+  //   var obj = {};
+  //   obj["img"] = "assets/t1.png";
+  //   obj["id"] = "t1";
+  //   tilesData.push(obj);
+  // }
+  var others = ["dong", "nan", "xi", "bei", "zhong", "fa", "baiban"];
+  others.forEach((element) => {
     var obj = {};
-    obj["img"] = "assets/tong-1.png";
-    obj["id"] = "tong-1";
+    obj["img"] = "assets/" + element + ".png";
+    obj["id"] = element;
+    tilesData.push(obj);
+  });
+  return tilesData;
+}
+
+function populateFlowers() {
+  const tilesData = [];
+  for (var i = 1; i <= 8; i++) {
+    var obj = {};
+    obj["img"] = "assets/" + "f" + i + ".png";
+    obj["id"] = "f" + i;
     tilesData.push(obj);
   }
+
+  for (var i = 1; i <= 4; i++) {
+    var obj = {};
+    obj["img"] = "assets/" + "a" + i + ".png";
+    obj["id"] = "f" + i;
+    tilesData.push(obj);
+  }
+
   return tilesData;
 }
 
@@ -80,6 +106,8 @@ export default function TileGrid() {
   const styles = useStyles;
   const tilesData = populateTiles();
   const [tilesCurrent, setTiles] = useState([]);
+  const flowersData = populateFlowers();
+  const [flowersCurrent, setFlowers] = useState([]);
 
   function updateTiles(tilesCurrent, current) {
     if (tilesCurrent.length > 13) {
@@ -98,11 +126,25 @@ export default function TileGrid() {
     setTiles(tiles);
   }
 
+  // Updates flowers
+  function updateFlowers(flowersCurrent, current) {
+    setFlowers((state) => {
+      return [...state, current];
+    });
+  }
+
+  // Resets tiles
+  function resetFlowers(flowersCurrent, current) {
+    var tiles = [];
+    setFlowers(tiles);
+  }
+
   return (
     <>
-      <Container maxWidth={"md"} alignContent={"centre"}>
+      <Container maxWidth={"md"} alignContent={"centre"} display={"flex"}>
+        {/* For tiles */}
         <h1 style={{ color: "black" }}>Select your tiles:</h1>
-        <GridList cellHeight={100} cols={9} style={styles.gridList}>
+        <GridList cellHeight={"auto"} cols={9} style={styles.gridList}>
           {tilesData.map((tile) => (
             <GridListTile>
               <Button
@@ -116,58 +158,92 @@ export default function TileGrid() {
             </GridListTile>
           ))}
         </GridList>
+
+        {/* For flowers */}
+        <GridList cellHeight={"auto"} cols={8} style={styles.gridList}>
+          {flowersData.map((tile) => (
+            <GridListTile>
+              <Button
+                key={tile.id}
+                variant="outlined"
+                className={styles.margin}
+                onClick={() => updateFlowers(flowersCurrent, tile)}
+              >
+                <img src={tile.img} />
+              </Button>
+            </GridListTile>
+          ))}
+        </GridList>
         <br></br>
+
+        {/* Display tiles */}
         <h1 style={{ color: "black" }}>Current tiles:</h1>
+        <Grid container className={styles.root} spacing={2}>
+          <Grid item xs={12}>
+            {console.log(tilesCurrent)}
+            <Grid container justify="center" spacing={2}>
+              {tilesCurrent.map((tile) => (
+                <Grid key={tile} item>
+                  {/* refer to index of list to fetch image*/}
+                  {tile == "" ? (
+                    <img src="assets/default.png" alt="" />
+                  ) : (
+                    <img src={tile.img} />
+                  )}
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+        </Grid>
+        <br></br>
+        <Grid container className={styles.root} spacing={2}>
+          <Grid item xs={12}>
+            <Grid container justify="center" spacing={2}>
+              <Grid item>
+                <Button variant="outlined" onClick={() => resetTiles()}>
+                  Clear
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        {/* Display flowers */}
+        <Grid container className={styles.root} spacing={2}>
+          <Grid item xs={12}>
+            {console.log(tilesCurrent)}
+            <Grid container justify="center" spacing={2}>
+              {flowersCurrent.map((tile) => (
+                <Grid key={tile} item>
+                  {/* refer to index of list to fetch image*/}
+                  {tile == "" ? (
+                    <img src="assets/default.png" alt="" />
+                  ) : (
+                    <img src={tile.img} />
+                  )}
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+        </Grid>
+        <br></br>
+        <Grid container className={styles.root} spacing={2}>
+          <Grid item xs={12}>
+            <Grid container justify="center" spacing={2}>
+              <Grid item>
+                <Button variant="outlined" onClick={() => resetFlowers()}>
+                  Clear
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button variant="outlined" onClick={() => resetFlowers()}>
+                  Calculate
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </Container>
-      <Grid container className={styles.root} spacing={2}>
-        <Grid item xs={12}>
-          {console.log(tilesCurrent)}
-          <Grid container justify="center" spacing={2}>
-            {tilesCurrent.map((tile) => (
-              <Grid key={tile} item>
-                {/* refer to index of list to fetch image*/}
-                {tile == "" ? (
-                  <img src="assets/default.png" alt="" />
-                ) : (
-                  <img src={tile.img} />
-                )}
-              </Grid>
-            ))}
-          </Grid>
-        </Grid>
-        {/* <Grid item xs={12}>
-          <Paper className={styles.control}></Paper>
-        </Grid> */}
-      </Grid>
-      <br></br>
-      <Grid container className={styles.root} spacing={2}>
-        <Grid item xs={12}>
-          <Grid container justify="center" spacing={2}>
-              <Grid item>
-            <Button
-              // key={tile.id}
-              variant="outlined"
-              //   className={styles.buttonContainer}
-              onClick={() => resetTiles()}
-            >
-              Clear
-            </Button>
-
-              </Grid>
-              <Grid item>
-            <Button
-              // key={tile.id}
-              variant="outlined"
-              //   className={styles.buttonContainer}
-              onClick={() => resetTiles()}
-            >
-                Calculate
-            </Button>
-
-              </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
     </>
   );
 }
