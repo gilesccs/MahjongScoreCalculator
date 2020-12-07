@@ -110,10 +110,25 @@ export default function TileGrid() {
   const [flowersCurrent, setFlowers] = useState([]);
 
   function updateTiles(tilesCurrent, current) {
+    // Validate less than 13 tiles
     if (tilesCurrent.length > 13) {
       alert("Maximum tiles reached!");
       return;
     }
+
+    // Validate max of 4 for that tile
+    console.log(current);
+    var count = 0;
+    for (var i = 0; i < tilesCurrent.length; i++) {
+      if (tilesCurrent[i].id == current.id) {
+        count++;
+      }
+    }
+    if (count === 4) {
+      alert("You have already added 4 of these tiles");
+      return;
+    }
+
     setTiles((state) => {
       return [...state, current];
     });
@@ -128,6 +143,14 @@ export default function TileGrid() {
 
   // Updates flowers
   function updateFlowers(flowersCurrent, current) {
+    for (var i = 0; i < flowersCurrent.length; i++) {
+      if (flowersCurrent[i].id === current.id) {
+        alert("You have already added this flower!");
+        return;
+      }
+    }
+    
+    
     setFlowers((state) => {
       return [...state, current];
     });
