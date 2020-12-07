@@ -5,6 +5,12 @@ import {
   GridListTile,
   Button,
   Container,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormLabel,
+  Checkbox,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -15,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     // justifyContent: "space-around",
     justifyContent: "center",
+    alignContent: "center",
+    width: "100vh",
+    height: "100vh",
     overflow: "hidden",
     backgroundColor: theme.palette.background.paper,
   },
@@ -42,6 +51,12 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 50,
     paddingRight: 50,
     flexGrow: 1,
+  },
+  form: {
+    alignContent: "center",
+    flexWrap: "wrap",
+    width: "100%",
+    justifyContent: "center",
   },
 }));
 
@@ -87,7 +102,7 @@ function populateFlowers() {
   for (var i = 1; i <= 4; i++) {
     var obj = {};
     obj["img"] = "assets/" + "a" + i + ".png";
-    obj["id"] = "f" + i;
+    obj["id"] = "a" + i;
     tilesData.push(obj);
   }
 
@@ -104,10 +119,33 @@ function populateFlowers() {
 
 export default function TileGrid() {
   const styles = useStyles;
+
+  // State for tiles
   const tilesData = populateTiles();
   const [tilesCurrent, setTiles] = useState([]);
+
+  // State for flowers
   const flowersData = populateFlowers();
   const [flowersCurrent, setFlowers] = useState([]);
+
+  // State for conditionals
+  const [conditions, setConditions] = useState({
+    ownwind: "1",
+    currentwind: "1",
+    haidilao: false,
+    huashang: false,
+    qg: false,
+  });
+
+  // For checkbox
+  const handleChange = (event) => {
+    setConditions({ ...conditions, [event.target.name]: event.target.checked });
+  };
+
+  const handleRadioChange = (event) => {
+    // console.log(event);
+    setConditions({ ...conditions, [event.target.name]: event.target.value });
+  };
 
   function updateTiles(tilesCurrent, current) {
     // Validate less than 13 tiles
@@ -117,7 +155,6 @@ export default function TileGrid() {
     }
 
     // Validate max of 4 for that tile
-    console.log(current);
     var count = 0;
     for (var i = 0; i < tilesCurrent.length; i++) {
       if (tilesCurrent[i].id == current.id) {
@@ -149,14 +186,13 @@ export default function TileGrid() {
         return;
       }
     }
-    
-    
+
     setFlowers((state) => {
       return [...state, current];
     });
   }
 
-  // Resets tiles
+  // Resets flowers
   function resetFlowers(flowersCurrent, current) {
     var tiles = [];
     setFlowers(tiles);
@@ -166,7 +202,10 @@ export default function TileGrid() {
     <>
       <Container maxWidth={"md"} alignContent={"centre"} display={"flex"}>
         {/* For tiles */}
-        <h1 style={{ color: "black" }}>Select your tiles:</h1>
+        <h2>Select your tiles:</h2>
+        <h3>
+          <i>Note: Do not enter your Gang(s) - four of a kind.</i>
+        </h3>
         <GridList cellHeight={"auto"} cols={9} style={styles.gridList}>
           {tilesData.map((tile) => (
             <GridListTile>
@@ -200,10 +239,9 @@ export default function TileGrid() {
         <br></br>
 
         {/* Display tiles */}
-        <h1 style={{ color: "black" }}>Current tiles:</h1>
+        <h2>Current tiles:</h2>
         <Grid container className={styles.root} spacing={2}>
           <Grid item xs={12}>
-            {console.log(tilesCurrent)}
             <Grid container justify="center" spacing={2}>
               {tilesCurrent.map((tile) => (
                 <Grid key={tile} item>
@@ -234,7 +272,6 @@ export default function TileGrid() {
         {/* Display flowers */}
         <Grid container className={styles.root} spacing={2}>
           <Grid item xs={12}>
-            {console.log(tilesCurrent)}
             <Grid container justify="center" spacing={2}>
               {flowersCurrent.map((tile) => (
                 <Grid key={tile} item>
@@ -258,14 +295,120 @@ export default function TileGrid() {
                   Clear
                 </Button>
               </Grid>
-              <Grid item>
-                <Button variant="outlined" onClick={() => resetFlowers()}>
-                  Calculate
-                </Button>
-              </Grid>
             </Grid>
           </Grid>
         </Grid>
+        {/* Conditionals */}
+        {console.log(conditions)}
+        <h2>Select your conditions:</h2>
+        <div className={"form"}>
+          <form>
+            <FormControl component="fieldset">
+              <FormLabel component="legend">Current Wind:</FormLabel>
+              <RadioGroup
+                row
+                aria-label="currentwind"
+                name="currentwind"
+                value={conditions.currentwind}
+              >
+                <FormControlLabel
+                  value="1"
+                  control={<Radio color="primary" />}
+                  label={<img src={"assets/dong.png"} />}
+                  onChange={handleRadioChange}
+                />
+                <FormControlLabel
+                  value="2"
+                  control={<Radio color="primary" />}
+                  label={<img src={"assets/nan.png"} />}
+                  onChange={handleRadioChange}
+                />
+                <FormControlLabel
+                  value="3"
+                  control={<Radio color="primary" />}
+                  label={<img src={"assets/xi.png"} />}
+                  onChange={handleRadioChange}
+                />
+                <FormControlLabel
+                  value="4"
+                  control={<Radio color="primary" />}
+                  label={<img src={"assets/bei.png"} />}
+                  onChange={handleRadioChange}
+                />
+              </RadioGroup>
+              <FormLabel component="legend">Individual Wind:</FormLabel>
+              <RadioGroup
+                row
+                aria-label="position"
+                name="ownwind"
+                value={conditions.ownwind}
+              >
+                <FormControlLabel
+                  value="1"
+                  control={<Radio color="primary" />}
+                  label={<img src={"assets/dong.png"} />}
+                  onChange={handleRadioChange}
+                />
+                <FormControlLabel
+                  value="2"
+                  control={<Radio color="primary" />}
+                  label={<img src={"assets/nan.png"} />}
+                  onChange={handleRadioChange}
+                />
+                <FormControlLabel
+                  value="3"
+                  control={<Radio color="primary" />}
+                  label={<img src={"assets/xi.png"} />}
+                  onChange={handleRadioChange}
+                />
+                <FormControlLabel
+                  value="4"
+                  control={<Radio color="primary" />}
+                  label={<img src={"assets/bei.png"} />}
+                  onChange={handleRadioChange}
+                />
+              </RadioGroup>
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={conditions.haidilao}
+                    onChange={handleChange}
+                    name="haidilao"
+                    color="primary"
+                  />
+                }
+                label="Hai Di Lao (Winning off a tile in the last 4 tiles):"
+              />
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={conditions.huashang}
+                    onChange={handleChange}
+                    name="huashang"
+                    color="primary"
+                  />
+                }
+                label="Hua Shang (Winning off a tile gotten from a flower):"
+              />
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={conditions.qg}
+                    onChange={handleChange}
+                    name="qg"
+                    color="primary"
+                  />
+                }
+                label="Qiang Gang (Winning off a tile someone else self Gang):"
+              />
+              <Button variant="outlined" onClick={() => resetFlowers()}>
+                Calculate
+              </Button>
+            </FormControl>
+          </form>
+        </div>
       </Container>
     </>
   );
