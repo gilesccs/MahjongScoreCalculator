@@ -22,7 +22,7 @@
 // ½ 1 9 -> 4 tai
 // SIAO SAN GONG/ZA HU(FAIL)
 // Show breakdown -> which tiles give which tai
-// const alltiles = ["t1","t2","t3","t4","t5","t6","t7","t8","t9","w1","w2","w3","w4","w5","w6","w7","w8","w9","b1","b2","b3","b4","b5","b6","b7","b8","b9","f1","f2","f3","f4","f5","f6","f7","f8","dong","nan","xi","bei","zhong","fa","bb","a1","a2","a3","a4"];
+// const alltiles = ["t1","t2","t3","t4","t5","t6","t7","t8","t9","w1","w2","w3","w4","w5","w6","w7","w8","w9","b1","b2","b3","b4","b5","b6","b7","b8","b9","f1","f2","f3","f4","f5","f6","f7","f8","dong","nan","xi","bei","zhong","fa","baiban","a1","a2","a3","a4"];
 let currenttiles = ["dong","xi","xi","xi","dong","dong","a1","a4","fa","fa","fa","nan","f4","f2","f3","f1"];
 let currentwind = 1;
 let ownwind = 3;
@@ -93,7 +93,7 @@ export function calculateTai(currenttiles, currentwind, haidilao, huashang, qg, 
   if(countOccurence("zhong",currenttiles) >= 3){
     tai+= 1;
   }
-  if(countOccurence("bb",currenttiles) >= 3){
+  if(countOccurence("baiban",currenttiles) >= 3){
     tai+= 1;
   }
   if(countOccurence("fa",currenttiles) >= 3){

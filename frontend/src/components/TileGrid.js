@@ -165,8 +165,8 @@ export default function TileGrid() {
         count++;
       }
     }
-    if (count === 4) {
-      alert("You have already added 4 of these tiles");
+    if (count === 3) {
+      alert("You have already added 3 of these tiles, do not add GANG!");
       return;
     }
 
