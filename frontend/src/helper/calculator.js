@@ -23,19 +23,20 @@
 // SIAO SAN GONG/ZA HU(FAIL)
 // Show breakdown -> which tiles give which tai
 // const alltiles = ["t1","t2","t3","t4","t5","t6","t7","t8","t9","w1","w2","w3","w4","w5","w6","w7","w8","w9","b1","b2","b3","b4","b5","b6","b7","b8","b9","f1","f2","f3","f4","f5","f6","f7","f8","dong","nan","xi","bei","zhong","fa","baiban","a1","a2","a3","a4"];
-let currenttiles = ["dong","xi","xi","xi","dong","dong","a1","a4","fa","fa","fa","nan","f4","f2","f3","f1"];
+let currenttiles = ["dong","nan","bei","dong","nan","bei","dong","nan","bei","xi","xi","xi"];
+let currentflowers = ["f1","a1"];
 let currentwind = 1;
 let ownwind = 3;
 let haidilao = true;
 let huashang = true;
-let zimo = true;
 let qg = true;
-let sevenzimo = 5;
-let sevenshoot = 2;
+let sevenzimo = false;
+let sevenshoot = false;
+let pinghustate = false;
 
 function countOccurence(tile,currenttiles){
   let count = 0;
-  let pinghustate = true;
+  
 
   for(let i =0; i<currenttiles.length; i++){
     let currenttile = currenttiles[i];
@@ -47,32 +48,41 @@ function countOccurence(tile,currenttiles){
   return count;
 }
 
-export function calculateTai(currenttiles, currentwind, haidilao, huashang, qg, sevenzimo, sevenshoot, pinghustate) {
-  let tai = 0;
+function calculateTai(currenttiles, currentflowers, currentwind, haidilao, huashang, qg, sevenzimo, pinghustate) {
+  let result = {tai:0,pattern:[]};
+  let pingstartstate;
+  if(pinghustate){
+    pingstartstate = true;
+  }
+
   //check animals
-  for(let i =0; i<currenttiles.length; i++){
-    let currenttile = currenttiles[i];
+  for(let i =0; i<currentflowers.length; i++){
+    let currenttile = currentflowers[i];
     if(currenttile.charAt(0) == 'a'){
-      tai += 1;
+      result.tai += 1;
+      if(currenttile.charAt(1) == '1') result.pattern.push(currenttile + "- cat 1 tai");
+      if(currenttile.charAt(1) == '2') result.pattern.push(currenttile + "- rat 1 tai");
+      if(currenttile.charAt(1) == '3') result.pattern.push(currenttile + "- rooster 1 tai");
+      if(currenttile.charAt(1) == '4') result.pattern.push(currenttile + "- centipede 1 tai");
       pinghustate = false;
     }
   }
   //check flowers 
   let tempflower = [];
   let temp = ownwind + 4;
-  for(let i =0; i<currenttiles.length; i++){
-    let currenttile = currenttiles[i];
+  for(let i =0; i<currentflowers.length; i++){
+    let currenttile = currentflowers[i];
     if(currenttile.charAt(0) == 'f' && currenttile != 'fa'){
       tempflower.push(currenttile);
       pinghustate = false;
       if(currenttile.charAt(1) == ownwind || currenttile.charAt(1) == temp){
-        tai+= 1;
+        result.tai+= 1;
+        result.pattern.push(currenttile + "- own flower 1 tai");
       }
     }
   }
   let flower1 = ["f1","f2","f3","f4"];
   let flower2 = ["f5","f6","f7","f8"];
-  console.log(tempflower);
   function checkAllFlowers(ownflowers, flowerarray){
     let state = true;
     for(let i =0; i<flowerarray.length; i++){
@@ -83,43 +93,43 @@ export function calculateTai(currenttiles, currentwind, haidilao, huashang, qg, 
     return state;
   }
   if(checkAllFlowers(tempflower,flower1)){
-    tai+= 1;
+    result.tai+= 1;
   }
   if(checkAllFlowers(tempflower,flower2)){
-    tai+= 1;
+    result.tai+= 1;
   }
 
   //check big tiles
   if(countOccurence("zhong",currenttiles) >= 3){
-    tai+= 1;
+    result.tai+= 1;
   }
   if(countOccurence("baiban",currenttiles) >= 3){
-    tai+= 1;
+    result.tai+= 1;
   }
   if(countOccurence("fa",currenttiles) >= 3){
-    tai+= 1;
+    result.tai+= 1;
   }
 
   switch(currentwind) {
     case 1:
       if(countOccurence("dong",currenttiles) >= 3){
-        tai+= 1;
+        result.tai+= 1;
       }
       break;
     case 2:
       if(countOccurence("nan",currenttiles) >= 3){
-        tai+= 1;
+        result.tai+= 1;
       }
       // code block
       break;
     case 3:
       if(countOccurence("xi",currenttiles) >= 3){
-        tai+= 1;
+        result.tai+= 1;
       }
       break;
     case 4:
       if(countOccurence("bei",currenttiles) >= 3){
-        tai+= 1;
+        result.tai+= 1;
       }
       break;
   }
@@ -128,23 +138,23 @@ export function calculateTai(currenttiles, currentwind, haidilao, huashang, qg, 
   switch(ownwind){
     case 1:
       if(countOccurence("dong",currenttiles) >= 3){
-        tai+= 1;
+        result.tai+= 1;
       }
       break;
     case 2:
       if(countOccurence("nan",currenttiles) >= 3){
-        tai+= 1;
+        result.tai+= 1;
       }
       // code block
       break;
     case 3:
       if(countOccurence("xi",currenttiles) >= 3){
-        tai+= 1;
+        result.tai+= 1;
       }
       break;
     case 4:
       if(countOccurence("bei",currenttiles) >= 3){
-        tai+= 1;
+        result.tai+= 1;
       }
       break;
   }
@@ -282,20 +292,264 @@ export function calculateTai(currenttiles, currentwind, haidilao, huashang, qg, 
     pongstate = false;
   }
 
-  if(tripletarr.length != 11){
+  if(tripletarr.length != 12){
     pongstate = false;
   }
 
   if(pongstate){
-    tai+=2;
+    console.log("pong");
+    result.tai+=2;
+  }
+
+  //13yao;
+  // const alltiles = ["t1","t2","t3","t4","t5","t6","t7","t8","t9","w1","w2","w3","w4","w5","w6","w7","w8","w9","b1","b2","b3","b4","b5","b6","b7","b8","b9","f1","f2","f3","f4","f5","f6","f7","f8","dong","nan","xi","bei","zhong","fa","baiban","a1","a2","a3","a4"];
+  //"dong","nan","xi","bei","zhong","fa","baiban", "t1", "t9", "w1", "w9", "b1", "b9", "anything"
+  const requiredList = ["dong","nan","xi","bei","zhong","fa","baiban", "t1", "t9", "w1", "w9", "b1", "b9"];
+  let yao13 = true;
+  for(let i =0; i<requiredList.length; i++){
+    let requiredTile = requiredList[i];
+    if(!currenttiles.includes(requiredTile)){
+      yao13 = false;
+      break;
+    }
+  }
+
+  if(eyearr.length != 2){
+    yao13 = false;
+  }
+
+  if(yao13){
+    console.log("13yao");
+    result.tai+= 5;
+  }
+
+  // 7 dui zi
+  let sevenstate = true;
+  for(let i =0; i<currenttiles.length; i++){
+    let currenttile = currenttiles[i];
+    if(countOccurence(currenttile,currenttiles) != 2){
+      sevenstate = false;
+      // console.log("yes");
+    }
+  }
+  if(sevenstate){
+    if(sevenzimo){
+      result.tai += 5;
+      console.log("7pair");
+    }else{
+      console.log("7pair");
+      result.tai += 2;
+    }
+  }
+  //Qing yi se
+  let onecolor = true;
+  let color = currenttiles[0].charAt(0);
+  for(let i =0; i<currenttiles.length; i++){
+    let currenttile = currenttiles[i];
+    if(currenttile.charAt(0) != color){
+      onecolor = false;
+    }
+  }
+  if(onecolor){
+    console.log("yi se");
+    result.tai += 4;
+  }
+  //check dapai one color
+  onecolor = true;
+  let dapaieyearr = []
+  const dapai = ["dong","nan","xi","bei","zhong","fa","baiban"];
+  for(let i =0; i<currenttiles.length; i++){
+    let currenttile = currenttiles[i];
+    if(countOccurence(currenttile,currenttiles) < 2 || !dapai.includes(currenttile)){
+      onecolor = false;
+    }else if (countOccurence(currenttile,currenttiles) == 2 && dapai.includes(currenttile)){
+      dapaieyearr.push(currenttile);
+    }
+  }
+
+  if(dapaieyearr.length != 2 && dapaieyearr.length != 0){
+    onecolor = false;
+  }
+  if(onecolor){
+    console.log("yi se");
+    result.tai += 4;
+  }
+
+  // Ban se
+  let firsttime = true;
+  let halfcolor = true;
+  
+  for(let i =0; i<currenttiles.length; i++){
+    let currenttile = currenttiles[i];
+    if(dapai.includes(currenttile)){
+      continue;
+    }else{
+      if(firsttime){
+        onecolor = currenttile.charAt(0);
+        firsttime = false;
+      }else{
+        if(currenttile.charAt(0) != color){
+          halfcolor = false;
+        }
+      }
+    }
+  }
+  if(halfcolor && !onecolor){
+    console.log("banse");
+    result.tai+= 2;
+  }
+  // Da si xi
+  let winds = ["dong","nan","xi","bei"];
+  let dasixi = true;
+  let dasixicounter = 0;
+  for(let i =0; i<currenttiles.length; i++){
+    let currenttile = currenttiles[i];
+    if(winds.includes(currenttile)){
+      dasixicounter++;
+      if(countOccurence(currenttile,currenttiles) != 3){
+        dasixi = false;
+      }
+    }else{
+      dasixi = false;
+    }
+  }
+  if(dasixicounter<12){
+    dasixi =false;
+  }
+  if(dasixi){
+    console.log("dasixi");
+    result.tai+=5;
+  }
+  // Xiao si xi
+  let xiaosixi = true;
+  let xiaosixiarr = [];
+  let xiaosixicounter = 0;
+  for(let i =0; i<currenttiles.length; i++){
+    let currenttile = currenttiles[i];
+    if(winds.includes(currenttile)){
+      xiaosixicounter++;
+      if(countOccurence(currenttile,currenttiles) == 2){
+        xiaosixiarr.push(currenttile);
+      }else if(countOccurence(currenttile,currenttiles) != 3){
+        xiaosixi = false;
+      }
+    }
+  }
+  if(xiaosixicounter<11){
+    xiaosixi = false;
+  }
+  if(xiaosixiarr.length != 2){
+    xiaosixi = false;
+  }
+  if(xiaosixi){
+    console.log("xsi");
+    result.tai += 2;
+  }
+  // da san yuan
+  const dsypai = ["zhong","fa","baiban"];
+  let dsy = true;
+  for(let i =0; i<dsypai.length; i++){
+    let currenttile = dsypai[i];
+    if(countOccurence(currenttile, currenttiles) != 3){
+      dsy = false;
+    }
+  }
+  if(dsy){
+    console.log("dsy");
+    result.tai += 5;
+  }
+  // siao san yuan 
+  let ssy = true;
+  let ssyyanjing = 0;
+  for(let i =0; i<dsypai.length; i++){
+    let currenttile = dsypai[i];
+    if(countOccurence(currenttile, currenttiles) < 2){
+      ssy = false;
+    }else if(countOccurence(currenttile, currenttiles) == 2){
+      if(ssyyanjing<=2){
+        ssyyanjing += 1;
+      }else{
+        ssy = false;
+      }
+    }
+  }
+  if(ssy){
+    console.log("ssy");
+    result.tai += 3;
+  }
+  // 1 9
+  const onenine = ["w1","w9","t1","t9","b1","b9"];
+  let oneninestate = true;
+  let oneninearr = [];
+  for(let i =0; i<currenttiles.length; i++){
+    let currenttile = currenttiles[i];
+    if(onenine.includes(currenttile)){
+      if(countOccurence(currenttile,currenttiles) == 2){
+        oneninearr.push(currenttile);
+      }else if(countOccurence(currenttile,currenttiles) != 3){
+        oneninestate = false;
+      }
+    }
+  }
+
+  if(oneninearr.length != 2 ){
+    oneninestate = false;
+  }
+
+  if(oneninestate){
+    console.log("oneninestate");
+    result.tai+= 5;
   }
 
 
+  // ½ 1 9 -> 2 tai
+  let halfoneninestate = true;
+  const halfnine = ["w1","w9","t1","t9","b1","b9"];
+  let halfninearr = [];
+  if(oneninestate == false){
 
+    for(let i =0; i<currenttiles.length; i++){
+      let currenttile = currenttiles[i];
+      if(halfnine.includes(currenttile)){
+        if(countOccurence(currenttile,currenttiles) == 2){
+          halfninearr.push(currenttile);
+        }else if(countOccurence(currenttile,currenttiles) != 3){
+          halfoneninestate = false;
+        }
+      }
+    }
 
+    if(halfninearr.length != 2 ){
+      halfoneninestate = false;
+    }
+  
+    if(halfoneninestate){
+      console.log("halfoneninestate");
+      result.tai+= 2;
+    }
 
+  }
+  if(result.tai>0){
+    if(haidilao){
+      result.tai+=1;
+    }
 
-  return tai;
+    if(qg){
+      result.tai+=1;
+    }
+
+    if(pinghustate){
+      result.tai+=4;
+    }else if(pingstartstate){
+      result.tai+=1;
+    }
+
+    if(huashang){
+      result.tai+=1;
+    }
+  }
+  
+  return result;
 }
 
-console.log(calculateTai(currenttiles, currentwind, haidilao, huashang, qg, sevenzimo, sevenshoot));
+console.log(calculateTai(currenttiles, currentflowers, currentwind, haidilao, huashang, qg, sevenzimo, sevenshoot));
