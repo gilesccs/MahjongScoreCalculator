@@ -7,7 +7,7 @@ function App() {
     <div>
       <Header></Header>
       <TileGrid></TileGrid>
-      <CurrentTiles></CurrentTiles>
+      {/* <CurrentTiles></CurrentTiles> */}
     </div>
   );
 }

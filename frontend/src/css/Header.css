@@ -31,5 +31,26 @@ h1{
     color: rgb(255, 255, 255);
     text-align: center;
     font-size: 80px;
-    font-Family: "Arial";
+    font-Family: "Roboto Condensed", sans-serif;
+}
+
+h2{
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: 60px;
+    font-Family: "Roboto Condensed", sans-serif;
+}
+
+h3 {
+    color: rgb(37, 37, 37);
+    text-align: center;
+    font-size: 20px;
+    font-Family: "Roboto Condensed", sans-serif;
+}
+
+.form {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-wrap: wrap;
 }
