@@ -264,6 +264,31 @@ function calculateTai(currenttiles, currentwind, haidilao, huashang, qg, sevenzi
 
   // }
 
+  // Pong pong hu
+  //check yanjing
+  let pongstate = true;
+  let eyearr = [];
+  let tripletarr = [];
+  for(let i =0; i<currenttiles.length; i++){
+    let currenttile = currenttiles[i];
+    if(countOccurence(currenttile,currenttiles) == 2){
+      eyearr.push(currenttile);
+    }else if(countOccurence(currenttile,currenttiles) == 3){
+      tripletarr.push(currenttile);
+    }
+  }
+
+  if(eyearr.length != 2){
+    pongstate = false;
+  }
+
+  if(tripletarr.length != 11){
+    pongstate = false;
+  }
+
+  if(pongstate){
+    tai+=2;
+  }
 
 
 
