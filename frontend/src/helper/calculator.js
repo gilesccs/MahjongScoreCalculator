@@ -48,7 +48,7 @@ function countOccurence(tile,currenttiles){
   return count;
 }
 
-function calculateTai(currenttiles, currentflowers, currentwind, haidilao, huashang, qg, sevenzimo, pinghustate) {
+function calculateTai(currenttiles, currentflowers, currentwind, ownwind, haidilao, huashang, qg, sevenzimo, pinghustate) {
   let result = {tai:0,pattern:[]};
   let pingstartstate;
   if(pinghustate){
