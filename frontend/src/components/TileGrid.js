@@ -15,7 +15,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { calculateTai } from "../helper/calculator.js";
 import { ToastContainer, toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -141,7 +141,14 @@ export default function TileGrid() {
     sevenzimo: false,
     sevenshoot: false,
     pinghustate: false,
+    zimo: false,
   });
+
+  // State for showing/hiding
+  const [isHidden, setIsHidden] = useState(false);
+
+  // State for storing results
+  const [results, setResults] = useState([]);
 
   // For checkbox
   const handleChange = (event) => {
@@ -195,15 +202,15 @@ export default function TileGrid() {
       return [...state, current];
     });
 
-    toast.success("Tile added!", {
-      position: "top-center",
-      autoClose: 1500,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    // toast.success("Tile added!", {
+    //   position: "top-center",
+    //   autoClose: 1000,
+    //   hideProgressBar: false,
+    //   closeOnClick: true,
+    //   pauseOnHover: true,
+    //   draggable: true,
+    //   progress: undefined,
+    // });
   }
 
   // Resets tiles
@@ -244,15 +251,15 @@ export default function TileGrid() {
       return [...state, current];
     });
 
-    toast.success("Flower Added!", {
-      position: "top-center",
-      autoClose: 2000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-    });
+    // toast.success("Flower Added!", {
+    //   position: "top-center",
+    //   autoClose: 1250,
+    //   hideProgressBar: false,
+    //   closeOnClick: true,
+    //   pauseOnHover: true,
+    //   draggable: true,
+    //   progress: undefined,
+    // });
   }
 
   // Resets flowers
@@ -271,44 +278,112 @@ export default function TileGrid() {
   }
 
   function handleSubmit() {
+    setIsHidden(true);
     var tilesList = [];
     tilesCurrent.forEach((element) => {
       tilesList.push(element.id);
     });
-    var tai = calculateTai(
-      tilesList,
-      conditions.currentwind,
-      conditions.haidilao,
-      conditions.qg,
-      conditions.sevenzimo,
-      conditions.sevenshoot,
-      conditions.pinghustate
-    );
-    alert("Congratulations! you have " + tai + "tai");
+    var flowersList = [];
+    flowersCurrent.forEach((element) => {
+      flowersList.push(element.id);
+    });
+    // var tai = calculateTai(
+    //   tilesList,
+    //   conditions.currentwind,
+    //   conditions.haidilao,
+    //   conditions.qg,
+    //   conditions.sevenzimo,
+    //   conditions.sevenshoot,
+    //   conditions.pinghustate
+    // );
+    // alert("Congratulations! you have " + tai + "tai");
+    var tai = ["2-pongponghu", "4-banse", "1-a1"];
+    var results = [];
+    tai.forEach((result) => {
+      let resultList = result.split("-");
+      let obj = {};
+      obj["tai"] = resultList[0];
+      obj["message"] = resultList[1];
+      results.push(obj);
+    });
+    setResults(results);
   }
 
   return (
     <>
       <Container maxWidth={"md"} alignContent={"centre"} display={"flex"}>
         {/* For tiles */}
-        <h2>Select your tiles:</h2>
-        <h3>
-          <i>Note: Do not enter your Gang(s) - four of a kind.</i>
-        </h3>
-        <GridList cellHeight={"auto"} cols={9} style={styles.gridList}>
-          {tilesData.map((tile) => (
-            <GridListTile>
-              <Button
-                key={tile.id}
-                variant="outlined"
-                className={styles.margin}
-                onClick={() => updateTiles(tilesCurrent, tile)}
-              >
-                <img src={tile.img} />
-              </Button>
-            </GridListTile>
-          ))}
-        </GridList>
+        {!isHidden ? (
+          <div>
+            <h2>Select your tiles:</h2>
+            <h3>
+              <i>Note: Do not enter your Gang(s) - four of a kind.</i>
+            </h3>
+            <GridList cellHeight={"auto"} cols={9} style={styles.gridList}>
+              {tilesData.map((tile) => (
+                <GridListTile>
+                  <Button
+                    key={tile.id}
+                    variant="outlined"
+                    className={styles.margin}
+                    onClick={() => updateTiles(tilesCurrent, tile)}
+                  >
+                    <img src={tile.img} />
+                  </Button>
+                </GridListTile>
+              ))}
+            </GridList>
+            {/* For flowers */}
+            <GridList cellHeight={"auto"} cols={8} style={styles.gridList}>
+              {flowersData.map((tile) => (
+                <GridListTile>
+                  <Button
+                    key={tile.id}
+                    variant="outlined"
+                    className={styles.margin}
+                    onClick={() => updateFlowers(flowersCurrent, tile)}
+                  >
+                    <img src={tile.img} />
+                  </Button>
+                </GridListTile>
+              ))}
+            </GridList>
+            <br></br>
+          </div>
+        ) : (
+          <div className={"results"}>
+            <h2>Results:</h2>
+            <Grid container spacing={1}>
+              {/* {results.map((combination) => (
+                <ul>
+                <li>
+                {combination.tai} - {combination.message}
+                </li>
+                </ul>
+              ))} */}
+              <Grid container item xs={12} spacing={3}>
+                    <Grid item xs={4}>
+                      Tai
+                    </Grid>
+                    <Grid item xs={4}>
+                      Combination
+                    </Grid>
+                  </Grid>
+              {results.map((combination) => (
+                <>
+                  <Grid container item xs={12} spacing={3}>
+                    <Grid item xs={4}>
+                      {combination.tai}
+                    </Grid>
+                    <Grid item xs={4}>
+                      {combination.message}
+                    </Grid>
+                  </Grid>
+                </>
+              ))}
+            </Grid>
+          </div>
+        )}
         <ToastContainer
           position="top-center"
           autoClose={5000}
@@ -320,22 +395,7 @@ export default function TileGrid() {
           draggable
           pauseOnHover
         />
-        ;{/* For flowers */}
-        <GridList cellHeight={"auto"} cols={8} style={styles.gridList}>
-          {flowersData.map((tile) => (
-            <GridListTile>
-              <Button
-                key={tile.id}
-                variant="outlined"
-                className={styles.margin}
-                onClick={() => updateFlowers(flowersCurrent, tile)}
-              >
-                <img src={tile.img} />
-              </Button>
-            </GridListTile>
-          ))}
-        </GridList>
-        <br></br>
+
         {/* Display tiles */}
         <h2>Current tiles:</h2>
         <Grid container className={styles.root} spacing={2}>
@@ -397,149 +457,171 @@ export default function TileGrid() {
         </Grid>
         {/* Conditionals */}
         {console.log(conditions)}
-        <h2>Select your conditions:</h2>
-        <div className={"form"}>
-          <form>
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Current Wind:</FormLabel>
-              <RadioGroup
-                row
-                aria-label="currentwind"
-                name="currentwind"
-                value={conditions.currentwind}
-              >
-                <FormControlLabel
-                  value="1"
-                  control={<Radio color="primary" />}
-                  label={<img src={"assets/dong.png"} />}
-                  onChange={handleRadioChange}
-                />
-                <FormControlLabel
-                  value="2"
-                  control={<Radio color="primary" />}
-                  label={<img src={"assets/nan.png"} />}
-                  onChange={handleRadioChange}
-                />
-                <FormControlLabel
-                  value="3"
-                  control={<Radio color="primary" />}
-                  label={<img src={"assets/xi.png"} />}
-                  onChange={handleRadioChange}
-                />
-                <FormControlLabel
-                  value="4"
-                  control={<Radio color="primary" />}
-                  label={<img src={"assets/bei.png"} />}
-                  onChange={handleRadioChange}
-                />
-              </RadioGroup>
-              <FormLabel component="legend">Individual Wind:</FormLabel>
-              <RadioGroup
-                row
-                aria-label="position"
-                name="ownwind"
-                value={conditions.ownwind}
-              >
-                <FormControlLabel
-                  value="1"
-                  control={<Radio color="primary" />}
-                  label={<img src={"assets/dong.png"} />}
-                  onChange={handleRadioChange}
-                />
-                <FormControlLabel
-                  value="2"
-                  control={<Radio color="primary" />}
-                  label={<img src={"assets/nan.png"} />}
-                  onChange={handleRadioChange}
-                />
-                <FormControlLabel
-                  value="3"
-                  control={<Radio color="primary" />}
-                  label={<img src={"assets/xi.png"} />}
-                  onChange={handleRadioChange}
-                />
-                <FormControlLabel
-                  value="4"
-                  control={<Radio color="primary" />}
-                  label={<img src={"assets/bei.png"} />}
-                  onChange={handleRadioChange}
-                />
-              </RadioGroup>
+        {!isHidden ? (
+          <div className={"form"}>
+            <h2>Select your conditions:</h2>
+            <form>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Current Wind:</FormLabel>
+                <RadioGroup
+                  row
+                  aria-label="currentwind"
+                  name="currentwind"
+                  value={conditions.currentwind}
+                >
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio color="primary" />}
+                    label={<img src={"assets/dong.png"} />}
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="2"
+                    control={<Radio color="primary" />}
+                    label={<img src={"assets/nan.png"} />}
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="3"
+                    control={<Radio color="primary" />}
+                    label={<img src={"assets/xi.png"} />}
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="4"
+                    control={<Radio color="primary" />}
+                    label={<img src={"assets/bei.png"} />}
+                    onChange={handleRadioChange}
+                  />
+                </RadioGroup>
+                <FormLabel component="legend">Individual Wind:</FormLabel>
+                <RadioGroup
+                  row
+                  aria-label="position"
+                  name="ownwind"
+                  value={conditions.ownwind}
+                >
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio color="primary" />}
+                    label={<img src={"assets/dong.png"} />}
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="2"
+                    control={<Radio color="primary" />}
+                    label={<img src={"assets/nan.png"} />}
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="3"
+                    control={<Radio color="primary" />}
+                    label={<img src={"assets/xi.png"} />}
+                    onChange={handleRadioChange}
+                  />
+                  <FormControlLabel
+                    value="4"
+                    control={<Radio color="primary" />}
+                    label={<img src={"assets/bei.png"} />}
+                    onChange={handleRadioChange}
+                  />
+                </RadioGroup>
 
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={conditions.haidilao}
-                    onChange={handleChange}
-                    name="haidilao"
-                    color="primary"
-                  />
-                }
-                label="Hai Di Lao (Winning off a tile in the last 4 tiles):"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={conditions.huashang}
-                    onChange={handleChange}
-                    name="huashang"
-                    color="primary"
-                  />
-                }
-                label="Hua Shang (Winning off a tile gotten from a flower):"
-              />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={conditions.haidilao}
+                      onChange={handleChange}
+                      name="haidilao"
+                      color="primary"
+                    />
+                  }
+                  label="Hai Di Lao (Winning off a tile in the last 4 tiles):"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={conditions.huashang}
+                      onChange={handleChange}
+                      name="huashang"
+                      color="primary"
+                    />
+                  }
+                  label="Hua Shang (Winning off a tile gotten from a flower):"
+                />
 
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={conditions.qg}
-                    onChange={handleChange}
-                    name="qg"
-                    color="primary"
-                  />
-                }
-                label="Qiang Gang (Winning off a tile someone else self Gang):"
-              />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={conditions.qg}
+                      onChange={handleChange}
+                      name="qg"
+                      color="primary"
+                    />
+                  }
+                  label="Qiang Gang (Winning off a tile someone else self Gang):"
+                />
 
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={conditions.sevenzimo}
-                    onChange={handleChange}
-                    name="sevenzimo"
-                    color="primary"
-                  />
-                }
-                label="Seven pairs (self-draw)"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={conditions.sevenshoot}
-                    onChange={handleChange}
-                    name="sevenshoot"
-                    color="primary"
-                  />
-                }
-                label="Seven pairs (winning of other's tile)"
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={conditions.pinghustate}
-                    onChange={handleChange}
-                    name="pinghustate"
-                    color="primary"
-                  />
-                }
-                label="Pinghu (All consecutive sets)"
-              />
-              <Button variant="outlined" onClick={() => handleSubmit()}>
-                Calculate
-              </Button>
-            </FormControl>
-          </form>
-        </div>
+                {/* <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={conditions.sevenzimo}
+                      onChange={handleChange}
+                      name="sevenzimo"
+                      color="primary"
+                    />
+                  }
+                  label="Seven pairs (self-draw)"
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={conditions.sevenshoot}
+                      onChange={handleChange}
+                      name="sevenshoot"
+                      color="primary"
+                    />
+                  }
+                  label="Seven pairs (winning of other's tile)"
+                /> */}
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={conditions.zimo}
+                      onChange={handleChange}
+                      name="zimo"
+                      color="primary"
+                    />
+                  }
+                  label="Self-drawn"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={conditions.pinghustate}
+                      onChange={handleChange}
+                      name="pinghustate"
+                      color="primary"
+                    />
+                  }
+                  label="Pinghu (All consecutive sets)"
+                />
+                <Button variant="outlined" onClick={() => handleSubmit()}>
+                  Calculate
+                </Button>
+              </FormControl>
+            </form>
+          </div>
+        ) : (
+          <div className={"form"}>
+            <br></br>
+            <Button variant="outlined" onClick={() => setIsHidden(false)}>
+              Back
+            </Button>
+          </div>
+        )}
       </Container>
     </>
   );

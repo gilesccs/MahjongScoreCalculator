@@ -53,4 +53,11 @@ h3 {
     align-content: center;
     justify-content: center;
     flex-wrap: wrap;
+    padding-top: 30px;
+    text-align: center;
+}
+
+.results {
+    text-align:center;
+    font-size: 30px;
 }
