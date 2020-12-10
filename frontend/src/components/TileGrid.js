@@ -174,7 +174,7 @@ export default function TileGrid() {
         progress: undefined,
       });
       return;
-    }
+    } 
 
     // Validate max of 4 for that tile
     var count = 0;
@@ -278,6 +278,21 @@ export default function TileGrid() {
   }
 
   function handleSubmit() {
+
+    // Checks if less than 14 tiles
+    if (tilesCurrent.length < 14) {
+      toast.error("Please add all 14 of your tiles.", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
+
     setIsHidden(true);
     var tilesList = [];
     tilesCurrent.forEach((element) => {
@@ -362,13 +377,13 @@ export default function TileGrid() {
                 </ul>
               ))} */}
               <Grid container item xs={12} spacing={3}>
-                    <Grid item xs={4}>
-                      Tai
-                    </Grid>
-                    <Grid item xs={4}>
-                      Combination
-                    </Grid>
-                  </Grid>
+                <Grid item xs={4}>
+                  Tai
+                </Grid>
+                <Grid item xs={4}>
+                  Combination
+                </Grid>
+              </Grid>
               {results.map((combination) => (
                 <>
                   <Grid container item xs={12} spacing={3}>
@@ -419,9 +434,11 @@ export default function TileGrid() {
           <Grid item xs={12}>
             <Grid container justify="center" spacing={2}>
               <Grid item>
-                <Button variant="outlined" onClick={() => resetTiles()}>
-                  Clear
-                </Button>
+                {!isHidden && (
+                  <Button variant="outlined" onClick={() => resetTiles()}>
+                    Clear
+                  </Button>
+                )}
               </Grid>
             </Grid>
           </Grid>
@@ -448,9 +465,11 @@ export default function TileGrid() {
           <Grid item xs={12}>
             <Grid container justify="center" spacing={2}>
               <Grid item>
-                <Button variant="outlined" onClick={() => resetFlowers()}>
-                  Clear
-                </Button>
+                {!isHidden && (
+                  <Button variant="outlined" onClick={() => resetFlowers()}>
+                    Clear
+                  </Button>
+                )}
               </Grid>
             </Grid>
           </Grid>
