@@ -14,6 +14,8 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { calculateTai } from "../helper/calculator.js";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -154,7 +156,16 @@ export default function TileGrid() {
   function updateTiles(tilesCurrent, current) {
     // Validate less than 13 tiles
     if (tilesCurrent.length > 14) {
-      alert("Maximum tiles reached!");
+      // alert("Maximum tiles reached!");
+      toast.error("Maximum tiles reached!", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       return;
     }
 
@@ -166,12 +177,32 @@ export default function TileGrid() {
       }
     }
     if (count === 3) {
-      alert("You have already added 3 of these tiles, do not add GANG!");
+      // alert("You have already added 3 of these tiles, do not add GANG!");
+
+      toast.error("You have already added 3 of these tiles", {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       return;
     }
 
     setTiles((state) => {
       return [...state, current];
+    });
+
+    toast.success("Tile added!", {
+      position: "top-center",
+      autoClose: 1500,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
     });
   }
 
@@ -180,13 +211,31 @@ export default function TileGrid() {
     // let tiles = populateCurrentTiles(13, "");
     var tiles = [];
     setTiles(tiles);
+    toast.success("Tiles Cleared!", {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   }
 
   // Updates flowers
   function updateFlowers(flowersCurrent, current) {
     for (var i = 0; i < flowersCurrent.length; i++) {
       if (flowersCurrent[i].id === current.id) {
-        alert("You have already added this flower!");
+        // alert("You have already added this flower!");
+        toast.error("You have already added this flower!", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
         return;
       }
     }
@@ -194,19 +243,38 @@ export default function TileGrid() {
     setFlowers((state) => {
       return [...state, current];
     });
+
+    toast.success("Flower Added!", {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   }
 
   // Resets flowers
   function resetFlowers(flowersCurrent, current) {
     var tiles = [];
     setFlowers(tiles);
+    toast.success("Flowers Cleared!", {
+      position: "top-center",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   }
 
   function handleSubmit() {
     var tilesList = [];
     tilesCurrent.forEach((element) => {
       tilesList.push(element.id);
-    })
+    });
     var tai = calculateTai(
       tilesList,
       conditions.currentwind,
@@ -216,7 +284,7 @@ export default function TileGrid() {
       conditions.sevenshoot,
       conditions.pinghustate
     );
-    alert("Congratulations! you have " +tai + "tai");
+    alert("Congratulations! you have " + tai + "tai");
   }
 
   return (
@@ -241,8 +309,18 @@ export default function TileGrid() {
             </GridListTile>
           ))}
         </GridList>
-
-        {/* For flowers */}
+        <ToastContainer
+          position="top-center"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        ;{/* For flowers */}
         <GridList cellHeight={"auto"} cols={8} style={styles.gridList}>
           {flowersData.map((tile) => (
             <GridListTile>
@@ -258,7 +336,6 @@ export default function TileGrid() {
           ))}
         </GridList>
         <br></br>
-
         {/* Display tiles */}
         <h2>Current tiles:</h2>
         <Grid container className={styles.root} spacing={2}>
@@ -289,7 +366,6 @@ export default function TileGrid() {
             </Grid>
           </Grid>
         </Grid>
-
         {/* Display flowers */}
         <Grid container className={styles.root} spacing={2}>
           <Grid item xs={12}>
@@ -456,7 +532,7 @@ export default function TileGrid() {
                     color="primary"
                   />
                 }
-                label="Pinghu"
+                label="Pinghu (All consecutive sets)"
               />
               <Button variant="outlined" onClick={() => handleSubmit()}>
                 Calculate
