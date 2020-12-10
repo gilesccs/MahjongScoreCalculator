@@ -173,7 +173,7 @@ export default function TileGrid() {
 
   function updateTiles(tilesCurrent, current) {
     // Validate less than 13 tiles
-    if (tilesCurrent.length > 14) {
+    if (tilesCurrent.length > 13) {
       // alert("Maximum tiles reached!");
       toast.error("Maximum tiles reached!", {
         position: "top-center",
