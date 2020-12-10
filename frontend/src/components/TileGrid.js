@@ -11,9 +11,17 @@ import {
   FormControl,
   FormLabel,
   Checkbox,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { calculateTai } from "../helper/calculator.js";
+// import { calculateTai } from "../helper/calculator.js";
+import calculateTai from "../helper/calculator.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -60,6 +68,11 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     width: "100%",
     justifyContent: "center",
+  },
+  table: {
+    minWidth: 650,
+    width: "50%",
+    fontSize: "50px",
   },
 }));
 
@@ -138,17 +151,15 @@ export default function TileGrid() {
     haidilao: false,
     huashang: false,
     qg: false,
-    sevenzimo: false,
-    sevenshoot: false,
-    pinghustate: false,
     zimo: false,
+    pinghustate: false,
   });
 
   // State for showing/hiding
   const [isHidden, setIsHidden] = useState(false);
 
   // State for storing results
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState({});
 
   // For checkbox
   const handleChange = (event) => {
@@ -162,7 +173,7 @@ export default function TileGrid() {
 
   function updateTiles(tilesCurrent, current) {
     // Validate less than 13 tiles
-    if (tilesCurrent.length > 13) {
+    if (tilesCurrent.length > 14) {
       // alert("Maximum tiles reached!");
       toast.error("Maximum tiles reached!", {
         position: "top-center",
@@ -174,7 +185,7 @@ export default function TileGrid() {
         progress: undefined,
       });
       return;
-    } 
+    }
 
     // Validate max of 4 for that tile
     var count = 0;
@@ -183,10 +194,10 @@ export default function TileGrid() {
         count++;
       }
     }
-    if (count === 3) {
+    if (count === 4) {
       // alert("You have already added 3 of these tiles, do not add GANG!");
 
-      toast.error("You have already added 3 of these tiles", {
+      toast.error("You have already added 4 of these tiles", {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,
@@ -278,7 +289,6 @@ export default function TileGrid() {
   }
 
   function handleSubmit() {
-
     // Checks if less than 14 tiles
     if (tilesCurrent.length < 14) {
       toast.error("Please add all 14 of your tiles.", {
@@ -302,38 +312,73 @@ export default function TileGrid() {
     flowersCurrent.forEach((element) => {
       flowersList.push(element.id);
     });
-    // var tai = calculateTai(
-    //   tilesList,
-    //   conditions.currentwind,
-    //   conditions.haidilao,
-    //   conditions.qg,
-    //   conditions.sevenzimo,
-    //   conditions.sevenshoot,
-    //   conditions.pinghustate
-    // );
+
+    var results = calculateTai(
+      tilesList,
+      flowersList,
+      conditions.currentwind,
+      conditions.haidilao,
+      conditions.huashang,
+      conditions.qg,
+      conditions.zimo,
+      conditions.pinghustate
+    );
     // alert("Congratulations! you have " + tai + "tai");
-    var tai = ["2-pongponghu", "4-banse", "1-a1"];
-    var results = [];
-    tai.forEach((result) => {
+    // var taiNum =
+
+    // var results = {};
+    // results["pattern"] = ["2-pongponghu", "4-banse", "1-a1"];
+    // var tai = ["2-pongponghu", "4-banse", "1-a1"];
+
+    const messages = new Map([
+      ["animals", ["Cat", "Mouse", "Rooster", "Centipede"]],
+      ["pongponghu", "All sets of 3"],
+      ["13demons", "13 Demons (1-9 of each suit, winds and dragon)"],
+      ["YiSe", "All tiles of the same kind"],
+      ["BanSe", "All suits of same kind and winds/dragons"],
+      ["DaSiXi", "All 4 winds in sets"],
+      ["XiaoSiXi", "3 Winds in sets and 1 pair of last wind"],
+      ["DaSanYuan", "3 Dragons in sets"],
+      ["XiaoSanYuan", "2 Dragons in sets and 1 pair of last dragon"],
+      ["YaoJiu", "All 1 and 9"],
+      ["BanYaoJiu", "1 and 9 and big tiles"],
+    ]);
+
+    // Process data and stores into result
+    var combinations = [];
+    results.pattern.forEach((result) => {
       let resultList = result.split("-");
       let obj = {};
+      console.log(resultList);
+      if (resultList[1].charAt(0) === "a") {
+        obj["message"] = messages.get("animals")[resultList[1].charAt(1) - 1];
+      } else {
+        obj["message"] = resultList[1];
+      }
       obj["tai"] = resultList[0];
-      obj["message"] = resultList[1];
-      results.push(obj);
+      combinations.push(obj);
     });
+
+    results["combinations"] = combinations;
+    results["tai"] = 7;
     setResults(results);
   }
 
   return (
     <>
-      <Container maxWidth={"md"} alignContent={"centre"} display={"flex"}>
+      <Container
+        maxWidth={"md"}
+        alignContent={"centre"}
+        display={"flex"}
+        style={styles.root}
+      >
         {/* For tiles */}
         {!isHidden ? (
           <div>
             <h2>Select your tiles:</h2>
-            <h3>
+            <h4>
               <i>Note: Do not enter your Gang(s) - four of a kind.</i>
-            </h3>
+            </h4>
             <GridList cellHeight={"auto"} cols={9} style={styles.gridList}>
               {tilesData.map((tile) => (
                 <GridListTile>
@@ -368,14 +413,24 @@ export default function TileGrid() {
         ) : (
           <div className={"results"}>
             <h2>Results:</h2>
-            <Grid container spacing={1}>
-              {/* {results.map((combination) => (
+            {results.tai > 5 ? (
+              <h3>
+                You have <green>5 (Max)</green> tai. (Actual:{" "}
+                <green>{results.tai}</green>){" "}
+              </h3>
+            ) : (
+              <h3>
+                You have <green>{results.tai}</green> tai.
+              </h3>
+            )}
+            {/* <Grid container spacing={1}>
+              {results.map((combination) => (
                 <ul>
                 <li>
                 {combination.tai} - {combination.message}
                 </li>
                 </ul>
-              ))} */}
+              ))}
               <Grid container item xs={12} spacing={3}>
                 <Grid item xs={4}>
                   Tai
@@ -384,7 +439,7 @@ export default function TileGrid() {
                   Combination
                 </Grid>
               </Grid>
-              {results.map((combination) => (
+              {results.combinations.map((combination) => (
                 <>
                   <Grid container item xs={12} spacing={3}>
                     <Grid item xs={4}>
@@ -396,7 +451,49 @@ export default function TileGrid() {
                   </Grid>
                 </>
               ))}
-            </Grid>
+            </Grid> */}
+
+            {/* <TableContainer component={Paper}>
+              <Table
+                className={styles.table}
+                size="small"
+                aria-label="Results table"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center">Combination</TableCell>
+                    <TableCell align="center">Tai</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {results.combinations.map((row) => (
+                    <TableRow key={row.message}>
+                      <TableCell component="th" scope="row" align="center">
+                        {row.message}
+                      </TableCell>
+                      <TableCell align="center">{row.tai}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer> */}
+
+            {/* <h1 id="title">React Dynamic Table</h1> */}
+            <table className="resultsTable">
+              <tbody>
+                <tr key="header">
+                  <th>Combination</th>
+                  <th>Tai</th>
+                </tr>
+                {results.combinations.map((row) => (
+                  // console.log(row);
+                  <tr key={row.message}>
+                    <td>{row.message}</td>
+                    <td>{row.tai}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
         <ToastContainer

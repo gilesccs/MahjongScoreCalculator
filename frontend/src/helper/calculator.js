@@ -573,4 +573,5 @@ function calculateTai(currenttiles, currentflowers, currentwind, ownwind, haidil
   return result;
 }
 
+export default calculateTai;
 // console.log(calculateTai(currenttiles, currentflowers, currentwind, haidilao, huashang, qg, sevenzimo, sevenshoot));
