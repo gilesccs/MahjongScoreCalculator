@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Live Demo
+
+Try out our website live [here](https://mahjong-calculator.herokuapp.com/) here!
+
 ## Available Scripts
 
 In the project directory, you can run:
