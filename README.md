@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Live Demo
 
-Try out our website live [here](https://mahjong-calculator.herokuapp.com/) here!
+Try out our website live [here](https://mahjong-calculator.herokuapp.com/)!
 
 ## Available Scripts
 
